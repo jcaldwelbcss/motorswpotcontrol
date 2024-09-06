@@ -1,0 +1,66 @@
+// Motor A
+
+int enA = 9;
+int in1 = 8;
+int in2 = 7;
+
+// Motor b
+
+int enB = 3;
+int in3 = 5;
+int in4 = 4;
+
+//Speed control pots
+int SpeedControl1 = A0;
+int SpeedControl2 = A1;
+
+//motor speed values - start at zero
+int motorSpeed1 = 0;
+int motorSpeed2 = 0;
+
+void setup()
+{
+//set all motor pins to outputs
+
+pinMode(ena, OUTPUT);
+pinMode(enB, OUTPUT);
+pinMode(in1, OUTPUT);
+pinMode(in2, OUTPUT);
+pinMode(in3, OUTPUT);
+pinMode(in4, OUTPUT);
+}
+
+void loop() {
+
+//set motor A forward
+
+digitalWrite(in1, HIGH);
+digitalWrite(in2, LOW);
+
+//set motor B forward
+
+digitalWrite(in3, HIGH);
+digitalWrite(in4, LOW);
+
+//Read the values from the pots
+
+motorSpeed1 = analogRead(SpeedControl1); //uses internal analog to digital converter, using 10 bits, which is why it is 1023
+motorSpeed2 = analogRead(SpeedControl2);
+
+//Convert to range of 0-255 (because analog reads 0-1023, and digital outputs 0-255)
+
+motorSpeed1 = map(motorSpeed1, 0, 1023, 0, 255); //map allows us to do this,  it is built into the arduino, and may not exist in all situations
+motorSpeed2 = map(motorSpeed2, 0, 1023, 0, 255);
+
+//Adjust to prevent 'buzz' at very low speed
+
+if (motorSpeed1 < 8)motorSpeed1 = 0;
+if (motorSpeed2 < 8)motorSpeed2 = 0;
+
+//set motor speeds
+
+analogWrite(enA, motorSpeed1);
+analogWrite(enB, motorSpeed2);
+
+}
+
